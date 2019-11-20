@@ -374,10 +374,8 @@ render(placeMainElement, createBordTemplate());
 const placeTaskListElement = placeMainElement.querySelector(`.board__tasks`);
 render(placeTaskListElement, createFormEditTaskTemplate());
 
-const getMarkup = (dataList, generator) => dataList.map(generator).join(`\n`);
-render(placeTaskListElement, getMarkup);
-
-
+const getMarkup = () => new Array(TASK_NUMBER).fill(createCardTaskTemplate()).join(``);
+render(placeTaskListElement, getMarkup());
 const bordElement = placeMainElement.querySelector(`.board`);
 render(bordElement, createButtonLoadMoreTemplate());
 
