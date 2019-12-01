@@ -52,7 +52,7 @@ const createHashtags = (tags) => {
   });
 };
 
-export const createTaskEditTemplate = (task) => {
+export const createFormEditTaskTemplate = (task) => {
   const {description, tags, dueDate, color, repeatingDays} = task;
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
