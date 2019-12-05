@@ -1,5 +1,5 @@
 import {COLORS} from '../const.js';
-import {getRandomBoolean, getRandomArrayItem, getRandomDate} from '../utils.js';
+import {getRandomBoolean, getRandomElementFromArray, getRandomDate} from '../utils.js';
 
 const MIN_TAGS_COUNT = 0;
 const MAX_TAGS_COUNT = 3;
@@ -42,11 +42,11 @@ const generateTask = () => {
   const dueDate = getRandomBoolean() ? null : getRandomDate();
   const days = dueDate ? DefaultRepeatingDays : generateRepeatingDays();
   return {
-    description: getRandomArrayItem(DESCRIPTION_ITEM),
+    description: getRandomElementFromArray(DESCRIPTION_ITEM),
     dueDate,
     repeatingDays: days,
     tags: new Set(generateTags(TAGS)),
-    color: getRandomArrayItem(COLORS),
+    color: getRandomElementFromArray(COLORS),
     isFavorite: getRandomBoolean(),
     isArchive: getRandomBoolean(),
     isRepeated: Object.values(days).some((day) => day),

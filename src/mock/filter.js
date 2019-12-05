@@ -5,7 +5,7 @@ const filtersNames = [
 
 
 const getFilterCountItems = (title, tasks) => {
-  // const filteredDueDateTasks = tasks.filter((task) => task.dueDate instanceof Date);
+
   switch (title) {
     case `overdue`:
       return tasks.filter((task) => task.dueDate < Date.now()).length;
