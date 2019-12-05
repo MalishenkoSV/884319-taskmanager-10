@@ -1,6 +1,5 @@
 // task.js
-import {MonthNames} from '../const.js';
-import {formatTime} from '../utils.js';
+import {moment} from '../utils.js';
 
 const createHashtagsMarkup = (hashtags) => {
   return hashtags
@@ -15,15 +14,13 @@ const createHashtagsMarkup = (hashtags) => {
     })
     .join(`\n`);
 };
+
 export const createCardTaskTemplate = (task) => {
   const {description, tags, dueDate, color, repeatingDays} = task;
-
-  const isExpired = dueDate instanceof Date && dueDate < Date.now();
-  const isDateShowing = !!dueDate;
-
-  const date = isDateShowing ? `${dueDate.getDate()} ${MonthNames[dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? formatTime(dueDate) : ``;
-
+  const isExpired = dueDate instanceof Date;
+  const m = moment(dueDate);
+  const cardTime = m.isValid() && m.format(`h:mm a`);
+  const cardDate = m.isValid() && m.format(`D MMMM`);
   const hashtags = createHashtagsMarkup(Array.from(tags));
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
   const deadlineClass = isExpired ? `card--deadline` : ``;
@@ -57,8 +54,8 @@ export const createCardTaskTemplate = (task) => {
                         <div class="card__dates">
                             <div class="card__date-deadline">
                                 <p class="card__input-deadline-wrap">
-                                    <span class="card__date">${date}</span>
-                                    <span class="card__time">${time}</span>
+                                    <span class="card__date">${cardDate ? cardDate : ``}</span>
+                                    <span class="card__time">${cardTime ? cardTime : ``}</span>
                                 </p>
                             </div>
                         </div>

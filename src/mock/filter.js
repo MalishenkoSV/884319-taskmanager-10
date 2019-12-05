@@ -1,11 +1,33 @@
-const filterNames = [
+import {getFullDate} from '../utils.js';
+const filtersNames = [
   `all`, `overdue`, `today`, `favorites`, `repeating`, `tags`, `archive`
 ];
-const generateFilters = () => {
-  return filterNames.map((it) => {
+
+
+const getFilterCountItems = (title, tasks) => {
+  // const filteredDueDateTasks = tasks.filter((task) => task.dueDate instanceof Date);
+  switch (title) {
+    case `overdue`:
+      return tasks.filter((task) => task.dueDate < Date.now()).length;
+    case `today`:
+      return tasks.filter((task) => getFullDate(task.dueDate) === getFullDate()).length;
+    case `favorites`:
+      return tasks.filter((task) => task.isFavorite).length;
+    case `repeating`:
+      return tasks.filter((task) => Object.values(task.repeatingDays).some(Boolean)).length;
+    case `tags`:
+      return tasks.filter((task) => Array.from(task.tags).length).length;
+    case `archive`:
+      return tasks.filter((task) => task.isArchive).length;
+    default:
+      return tasks.length;
+  }
+};
+const generateFilters = (tasks) => {
+  return filtersNames.map((it) => {
     return {
       name: it,
-      count: Math.floor(Math.random() * 10),
+      count: getFilterCountItems(it, tasks),
     };
   });
 };

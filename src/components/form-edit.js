@@ -1,5 +1,5 @@
 // form-edit.js
-import {Colors, Days, MonthNames} from '../const.js';
+import {COLORS, DAYS, MONTH_NAMES} from '../const.js';
 import {formatTime} from '../utils.js';
 
 const createCardsColorsMarkup = (colors, currentColor) => {
@@ -54,11 +54,11 @@ const createHashtags = (tags) => {
 
 export const createFormEditTaskTemplate = (task) => {
   const {description, tags, dueDate, color, repeatingDays} = task;
+
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
 
-
-  const date = isDateShowing ? `${dueDate.getDate()} ${MonthNames[dueDate.getMonth()]}` : ``;
+  const date = isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
@@ -66,8 +66,9 @@ export const createFormEditTaskTemplate = (task) => {
   const deadlineClass = isExpired ? `card--deadline` : ``;
 
   const tagsMarkup = createHashtags(tags);
-  const colorsMarkup = createCardsColorsMarkup(Colors, color);
-  const repeatingDaysMarkup = createRepeatingDaysMarkup(Days, repeatingDays);
+  const colorsMarkup = createCardsColorsMarkup(COLORS, color);
+  const repeatingDaysMarkup = createRepeatingDaysMarkup(DAYS, repeatingDays);
+
 
   return (
     `<article class="card card--edit card--${color} card--${repeatClass} ${deadlineClass}">

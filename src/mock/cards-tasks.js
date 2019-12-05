@@ -1,6 +1,10 @@
-import {Colors} from '../const.js';
+import {COLORS} from '../const.js';
+import {getRandomBoolean, getRandomArrayItem, getRandomDate} from '../utils.js';
 
-const DescriptionItems = [
+const MIN_TAGS_COUNT = 0;
+const MAX_TAGS_COUNT = 3;
+
+const DESCRIPTION_ITEM = [
   `Изучить теорию`,
   `Сделать домашку`,
   `Пройти интенсив на соточку`,
@@ -16,7 +20,7 @@ const DefaultRepeatingDays = {
   'su': false,
 };
 
-const Tags = [
+const TAGS = [
   `homework`,
   `theory`,
   `practice`,
@@ -24,48 +28,28 @@ const Tags = [
   `keks`
 ];
 
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(max * Math.random());
-};
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-
-  return array[randomIndex];
-};
-
 const generateTags = (tags) => {
-  return tags
-    .filter(() => Math.random() > 0.5)
-    .slice(0, 3);
-};
-
-const getRandomDate = () => {
-  const targetDate = new Date();
-  const sign = Math.random() > 0.5 ? 1 : -1;
-  const diffValue = sign * getRandomIntegerNumber(0, 7);
-
-  targetDate.setDate(targetDate.getDate() + diffValue);
-
-  return targetDate;
+  return tags.filter(() => getRandomBoolean()).slice(MIN_TAGS_COUNT, MAX_TAGS_COUNT);
 };
 
 const generateRepeatingDays = () => {
   return Object.assign({}, DefaultRepeatingDays, {
-    'mo': Math.random() > 0.5,
+    'mo': getRandomBoolean(),
   });
 };
 
 const generateTask = () => {
-  const dueDate = Math.random() > 0.5 ? null : getRandomDate();
+  const dueDate = getRandomBoolean() ? null : getRandomDate();
+  const days = dueDate ? DefaultRepeatingDays : generateRepeatingDays();
   return {
-    description: getRandomArrayItem(DescriptionItems),
+    description: getRandomArrayItem(DESCRIPTION_ITEM),
     dueDate,
-    repeatingDays: dueDate ? DefaultRepeatingDays : generateRepeatingDays(),
-    tags: new Set(generateTags(Tags)),
-    color: getRandomArrayItem(Colors),
-    isFavorite: Math.random() > 0.5,
-    isArchive: Math.random() > 0.5,
+    repeatingDays: days,
+    tags: new Set(generateTags(TAGS)),
+    color: getRandomArrayItem(COLORS),
+    isFavorite: getRandomBoolean(),
+    isArchive: getRandomBoolean(),
+    isRepeated: Object.values(days).some((day) => day),
   };
 
 };

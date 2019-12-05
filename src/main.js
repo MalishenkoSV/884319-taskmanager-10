@@ -30,7 +30,7 @@ const placeTaskListElement = placeMainElement.querySelector(`.board__tasks`);
 const tasks = generateTasks(TASK_NUMBER);
 render(placeTaskListElement, createFormEditTaskTemplate(tasks[0]));
 let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-tasks.slice(1, showingTasksCount).forEach((task) => render(placeTaskListElement, createCardTaskTemplate(task), `beforeend`));
+tasks.slice(1, showingTasksCount).map((task) => render(placeTaskListElement, createCardTaskTemplate(task), `beforeend`));
 
 const boardElement = placeMainElement.querySelector(`.board`);
 render(boardElement, createButtonLoadMoreTemplate());
@@ -39,7 +39,7 @@ const loadMoreButton = boardElement.querySelector(`.load-more`);
 loadMoreButton.addEventListener(`click`, () => {
   const prevTasksCount = showingTasksCount;
   showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-  tasks.slice(prevTasksCount, showingTasksCount).forEach((task) => render(placeTaskListElement, createCardTaskTemplate(task), `beforeend`));
+  tasks.slice(prevTasksCount, showingTasksCount).map((task) => render(placeTaskListElement, createCardTaskTemplate(task), `beforeend`));
   if (showingTasksCount >= tasks.length) {
     loadMoreButton.remove();
   }

@@ -125,7 +125,7 @@ const createBordTemplate = () => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createFilterTemplate", function() { return createFilterTemplate; });
 // filter.js
-const createFilterMakeup = (filter, isChecked) => {
+const createFilterMarkup = (filter, isChecked) => {
   const {name, count} = filter;
 
   return (
@@ -140,7 +140,7 @@ const createFilterMakeup = (filter, isChecked) => {
   );
 };
 const createFilterTemplate = (filters) => {
-  const filtersMakeup = filters.map((it, i) => createFilterMakeup(it, i === 0)).join(`\n`);
+  const filtersMakeup = filters.map((it, i) => createFilterMarkup(it, i === 0)).join(`\n`);
 
   return (
     `<section class="main__filter filter container">
@@ -220,11 +220,11 @@ const createHashtags = (tags) => {
 
 const createFormEditTaskTemplate = (task) => {
   const {description, tags, dueDate, color, repeatingDays} = task;
+
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
 
-
-  const date = isDateShowing ? `${dueDate.getDate()} ${_const_js__WEBPACK_IMPORTED_MODULE_0__["MonthNames"][dueDate.getMonth()]}` : ``;
+  const date = isDateShowing ? `${dueDate.getDate()} ${_const_js__WEBPACK_IMPORTED_MODULE_0__["MONTH_NAMES"][dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["formatTime"])(dueDate) : ``;
 
   const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
@@ -232,8 +232,9 @@ const createFormEditTaskTemplate = (task) => {
   const deadlineClass = isExpired ? `card--deadline` : ``;
 
   const tagsMarkup = createHashtags(tags);
-  const colorsMarkup = createCardsColorsMarkup(_const_js__WEBPACK_IMPORTED_MODULE_0__["Colors"], color);
-  const repeatingDaysMarkup = createRepeatingDaysMarkup(_const_js__WEBPACK_IMPORTED_MODULE_0__["Days"], repeatingDays);
+  const colorsMarkup = createCardsColorsMarkup(_const_js__WEBPACK_IMPORTED_MODULE_0__["COLORS"], color);
+  const repeatingDaysMarkup = createRepeatingDaysMarkup(_const_js__WEBPACK_IMPORTED_MODULE_0__["DAYS"], repeatingDays);
+
 
   return (
     `<article class="card card--edit card--${color} card--${repeatClass} ${deadlineClass}">
@@ -384,10 +385,8 @@ const createMenuSiteTemplate = () => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createCardTaskTemplate", function() { return createCardTaskTemplate; });
-/* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../const.js */ "./src/const.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils.js */ "./src/utils.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils.js */ "./src/utils.js");
 // task.js
-
 
 
 const createHashtagsMarkup = (hashtags) => {
@@ -403,15 +402,13 @@ const createHashtagsMarkup = (hashtags) => {
     })
     .join(`\n`);
 };
+
 const createCardTaskTemplate = (task) => {
   const {description, tags, dueDate, color, repeatingDays} = task;
-
-  const isExpired = dueDate instanceof Date && dueDate < Date.now();
-  const isDateShowing = !!dueDate;
-
-  const date = isDateShowing ? `${dueDate.getDate()} ${_const_js__WEBPACK_IMPORTED_MODULE_0__["MonthNames"][dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["formatTime"])(dueDate) : ``;
-
+  const isExpired = dueDate instanceof Date;
+  const m = Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["moment"])(dueDate);
+  const cardTime = m.isValid() && m.format(`h:mm a`);
+  const cardDate = m.isValid() && m.format(`D MMMM`);
   const hashtags = createHashtagsMarkup(Array.from(tags));
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
   const deadlineClass = isExpired ? `card--deadline` : ``;
@@ -445,8 +442,8 @@ const createCardTaskTemplate = (task) => {
                         <div class="card__dates">
                             <div class="card__date-deadline">
                                 <p class="card__input-deadline-wrap">
-                                    <span class="card__date">${date}</span>
-                                    <span class="card__time">${time}</span>
+                                    <span class="card__date">${cardDate ? cardDate : ``}</span>
+                                    <span class="card__time">${cardTime ? cardTime : ``}</span>
                                 </p>
                             </div>
                         </div>
@@ -470,19 +467,19 @@ const createCardTaskTemplate = (task) => {
 /*!**********************!*\
   !*** ./src/const.js ***!
   \**********************/
-/*! exports provided: Colors, Days, MonthNames */
+/*! exports provided: COLORS, DAYS, MONTH_NAMES */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Colors", function() { return Colors; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Days", function() { return Days; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MonthNames", function() { return MonthNames; });
-const Colors = [`black`, `yellow`, `blue`, `green`, `pink`];
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "COLORS", function() { return COLORS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DAYS", function() { return DAYS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MONTH_NAMES", function() { return MONTH_NAMES; });
+const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
 
-const Days = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
+const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 
-const MonthNames = [
+const MONTH_NAMES = [
   `January`,
   `February`,
   `March`,
@@ -549,7 +546,7 @@ const placeTaskListElement = placeMainElement.querySelector(`.board__tasks`);
 const tasks = Object(_mock_cards_tasks_js__WEBPACK_IMPORTED_MODULE_6__["generateTasks"])(TASK_NUMBER);
 render(placeTaskListElement, Object(_components_form_edit_js__WEBPACK_IMPORTED_MODULE_3__["createFormEditTaskTemplate"])(tasks[0]));
 let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-tasks.slice(1, showingTasksCount).forEach((task) => render(placeTaskListElement, Object(_components_task_js__WEBPACK_IMPORTED_MODULE_2__["createCardTaskTemplate"])(task), `beforeend`));
+tasks.slice(1, showingTasksCount).map((task) => render(placeTaskListElement, Object(_components_task_js__WEBPACK_IMPORTED_MODULE_2__["createCardTaskTemplate"])(task), `beforeend`));
 
 const boardElement = placeMainElement.querySelector(`.board`);
 render(boardElement, Object(_components_load_more_button_js__WEBPACK_IMPORTED_MODULE_4__["createButtonLoadMoreTemplate"])());
@@ -558,7 +555,7 @@ const loadMoreButton = boardElement.querySelector(`.load-more`);
 loadMoreButton.addEventListener(`click`, () => {
   const prevTasksCount = showingTasksCount;
   showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-  tasks.slice(prevTasksCount, showingTasksCount).forEach((task) => render(placeTaskListElement, Object(_components_task_js__WEBPACK_IMPORTED_MODULE_2__["createCardTaskTemplate"])(task), `beforeend`));
+  tasks.slice(prevTasksCount, showingTasksCount).map((task) => render(placeTaskListElement, Object(_components_task_js__WEBPACK_IMPORTED_MODULE_2__["createCardTaskTemplate"])(task), `beforeend`));
   if (showingTasksCount >= tasks.length) {
     loadMoreButton.remove();
   }
@@ -579,9 +576,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateTask", function() { return generateTask; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateTasks", function() { return generateTasks; });
 /* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../const.js */ "./src/const.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils.js */ "./src/utils.js");
 
 
-const DescriptionItems = [
+
+const MIN_TAGS_COUNT = 0;
+const MAX_TAGS_COUNT = 3;
+
+const DESCRIPTION_ITEM = [
   `Изучить теорию`,
   `Сделать домашку`,
   `Пройти интенсив на соточку`,
@@ -597,7 +599,7 @@ const DefaultRepeatingDays = {
   'su': false,
 };
 
-const Tags = [
+const TAGS = [
   `homework`,
   `theory`,
   `practice`,
@@ -605,48 +607,28 @@ const Tags = [
   `keks`
 ];
 
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(max * Math.random());
-};
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-
-  return array[randomIndex];
-};
-
 const generateTags = (tags) => {
-  return tags
-    .filter(() => Math.random() > 0.5)
-    .slice(0, 3);
-};
-
-const getRandomDate = () => {
-  const targetDate = new Date();
-  const sign = Math.random() > 0.5 ? 1 : -1;
-  const diffValue = sign * getRandomIntegerNumber(0, 7);
-
-  targetDate.setDate(targetDate.getDate() + diffValue);
-
-  return targetDate;
+  return tags.filter(() => Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomBoolean"])()).slice(MIN_TAGS_COUNT, MAX_TAGS_COUNT);
 };
 
 const generateRepeatingDays = () => {
   return Object.assign({}, DefaultRepeatingDays, {
-    'mo': Math.random() > 0.5,
+    'mo': Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomBoolean"])(),
   });
 };
 
 const generateTask = () => {
-  const dueDate = Math.random() > 0.5 ? null : getRandomDate();
+  const dueDate = Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomBoolean"])() ? null : Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomDate"])();
+  const days = dueDate ? DefaultRepeatingDays : generateRepeatingDays();
   return {
-    description: getRandomArrayItem(DescriptionItems),
+    description: Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomArrayItem"])(DESCRIPTION_ITEM),
     dueDate,
-    repeatingDays: dueDate ? DefaultRepeatingDays : generateRepeatingDays(),
-    tags: new Set(generateTags(Tags)),
-    color: getRandomArrayItem(_const_js__WEBPACK_IMPORTED_MODULE_0__["Colors"]),
-    isFavorite: Math.random() > 0.5,
-    isArchive: Math.random() > 0.5,
+    repeatingDays: days,
+    tags: new Set(generateTags(TAGS)),
+    color: Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomArrayItem"])(_const_js__WEBPACK_IMPORTED_MODULE_0__["COLORS"]),
+    isFavorite: Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomBoolean"])(),
+    isArchive: Object(_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomBoolean"])(),
+    isRepeated: Object.values(days).some((day) => day),
   };
 
 };
@@ -669,14 +651,37 @@ const generateTasks = (count) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateFilters", function() { return generateFilters; });
-const filterNames = [
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils.js */ "./src/utils.js");
+
+const filtersNames = [
   `all`, `overdue`, `today`, `favorites`, `repeating`, `tags`, `archive`
 ];
-const generateFilters = () => {
-  return filterNames.map((it) => {
+
+
+const getFilterCountItems = (title, tasks) => {
+  // const filteredDueDateTasks = tasks.filter((task) => task.dueDate instanceof Date);
+  switch (title) {
+    case `overdue`:
+      return tasks.filter((task) => task.dueDate < Date.now()).length;
+    case `today`:
+      return tasks.filter((task) => Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["getFullDate"])(task.dueDate) === Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["getFullDate"])()).length;
+    case `favorites`:
+      return tasks.filter((task) => task.isFavorite).length;
+    case `repeating`:
+      return tasks.filter((task) => Object.values(task.repeatingDays).some(Boolean)).length;
+    case `tags`:
+      return tasks.filter((task) => Array.from(task.tags).length).length;
+    case `archive`:
+      return tasks.filter((task) => task.isArchive).length;
+    default:
+      return tasks.length;
+  }
+};
+const generateFilters = (tasks) => {
+  return filtersNames.map((it) => {
     return {
       name: it,
-      count: Math.floor(Math.random() * 10),
+      count: getFilterCountItems(it, tasks),
     };
   });
 };
@@ -690,12 +695,34 @@ const generateFilters = () => {
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: formatTime */
+/*! exports provided: getRandomIntegerNumber, getRandomBoolean, getRandomArrayItem, formatTime, isToday, isExpired */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandomIntegerNumber", function() { return getRandomIntegerNumber; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandomBoolean", function() { return getRandomBoolean; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandomArrayItem", function() { return getRandomArrayItem; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formatTime", function() { return formatTime; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isToday", function() { return isToday; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isExpired", function() { return isExpired; });
+const RANDOM_LIMIT = 0.5;
+const MIN_RANDOM_NUMBER = 0;
+
+const getRandomIntegerNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const getRandomBoolean = () => {
+  return Math.random() > RANDOM_LIMIT;
+};
+
+const getRandomArrayItem = (array) => {
+  const randomIndex = getRandomIntegerNumber(MIN_RANDOM_NUMBER, array.length);
+
+  return array[randomIndex];
+};
+
 const castTimeFormat = (value) => {
   return value < 10 ? `0${value}` : String(value);
 };
@@ -707,6 +734,18 @@ const formatTime = (date) => {
   const interval = date.getHours() > 11 ? `pm` : `am`;
 
   return `${hours}:${minutes} ${interval}`;
+};
+
+const isToday = (date) => {
+  const today = new Date();
+  return date.getDate() === today.getDate() &&
+  date.getMonth() === today.getMonth() &&
+  date.getFullYear() === today.getFullYear();
+};
+
+const isExpired = (date) => {
+  const today = new Date();
+  return date < today;
 };
 
 
