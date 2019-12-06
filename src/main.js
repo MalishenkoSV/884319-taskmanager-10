@@ -7,7 +7,7 @@ import {createFormEditTaskTemplate} from './components/form-edit.js';
 import {createButtonLoadMoreTemplate} from './components/load-more-button.js';
 import {createBordTemplate} from './components/board.js';
 import {generateTasks} from './mock/cards-tasks.js';
-import {generateFilters} from './mock/filter.js';
+import {generateFilters} from "./mock/filter";
 
 const TASK_NUMBER = 22;
 const SHOWING_TASKS_COUNT_ON_START = 8;
@@ -22,15 +22,17 @@ const placeMainElement = document.querySelector(`.main`);
 const placeMainControl = placeMainElement.querySelector(`.main__control`);
 render(placeMainControl, createMenuSiteTemplate());
 
-const filters = generateFilters();
+let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
+const tasks = generateTasks(TASK_NUMBER);
+
+const filters = generateFilters(tasks);
 render(placeMainElement, createFilterTemplate(filters));
-render(placeMainElement, createBordTemplate(TASK_NUMBER));
+render(placeMainElement, createBordTemplate());
 
 const placeTaskListElement = placeMainElement.querySelector(`.board__tasks`);
-const tasks = generateTasks(TASK_NUMBER);
 render(placeTaskListElement, createFormEditTaskTemplate(tasks[0]));
-let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-tasks.slice(1, showingTasksCount).map((task) => render(placeTaskListElement, createCardTaskTemplate(task), `beforeend`));
+
+tasks.slice(1, showingTasksCount).map((task) => render(placeTaskListElement, createCardTaskTemplate(task)));
 
 const boardElement = placeMainElement.querySelector(`.board`);
 render(boardElement, createButtonLoadMoreTemplate());

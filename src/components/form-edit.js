@@ -55,23 +55,17 @@ const createHashtags = (tags) => {
 export const createFormEditTaskTemplate = (task) => {
   const {description, tags, dueDate, color, repeatingDays} = task;
 
-  const isExpired = dueDate instanceof Date && dueDate < Date.now();
+  // const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? formatTime(dueDate) : ``;
-
-  const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
-  const repeatClass = isRepeatingTask ? `card--repeat` : ``;
-  const deadlineClass = isExpired ? `card--deadline` : ``;
-
+  // const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
+  // const repeatClass = isRepeatingTask ? `card--repeat` : ``;
+  // const deadlineClass = isExpired ? `card--deadline` : ``;
   const tagsMarkup = createHashtags(tags);
   const colorsMarkup = createCardsColorsMarkup(COLORS, color);
   const repeatingDaysMarkup = createRepeatingDaysMarkup(DAYS, repeatingDays);
-
-
   return (
-    `<article class="card card--edit card--${color} card--${repeatClass} ${deadlineClass}">
+    `<article class="card card--edit card--yellow card--repeat">
         <form class="card__form" method="get">
             <div class="card__inner">
                 <div class="card__color-bar">
@@ -94,26 +88,25 @@ export const createFormEditTaskTemplate = (task) => {
                             <button class="card__date-deadline-toggle" type="button">
                               date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
                             </button>
-                            ${isDateShowing ? `<fieldset class="card__date-deadline">
-                                                  <label class="card__input-deadline-wrap">
-                                                    <input
-                                                      class="card__date"
-                                                      type="text"
-                                                      placeholder=""
-                                                      name="date"
-                                                      value="${date} ${time}"
-                                                    />
-                                                  </label>
-                                                </fieldset>` : `` }
+                            <fieldset class="card__date-deadline">
+                              <label class="card__input-deadline-wrap">
+                                <input
+                                  class="card__date"
+                                  type="text"
+                                  placeholder=""
+                                  name="date"
+                                  value="23 September 11:15 PM"/>
+                              </label>
+                            </fieldset>
                         <button class="card__repeat-toggle" type="button">repeat:
-                            <span class="card__repeat-status">yes
+                            <span class="card__repeat-status">${isDateShowing ? `yes` : `no`}</span>
                             </span>
                         </button>
-                        ${isRepeatingTask ? `<fieldset class="card__repeat-days">
+                        <fieldset class="card__repeat-days">
                             <div class="card__repeat-days-inner">
                               ${repeatingDaysMarkup}
                             </div>
-                        </fieldset>` : `` }
+                        </fieldset>
                     </div>
 
                         <div class="card__hashtag">

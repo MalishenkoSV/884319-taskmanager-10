@@ -32,12 +32,22 @@ const generateTags = (tags) => {
   return tags.filter(() => getRandomBoolean()).slice(MIN_TAGS_COUNT, MAX_TAGS_COUNT);
 };
 
+// const generateRepeatingDays = () => {
+//   return Object.assign({}, DefaultRepeatingDays, {
+//     'mo': getRandomBoolean(),
+//   });
+// };
 const generateRepeatingDays = () => {
   return Object.assign({}, DefaultRepeatingDays, {
     'mo': getRandomBoolean(),
+    'tu': getRandomBoolean(),
+    'we': getRandomBoolean(),
+    'th': getRandomBoolean(),
+    'fr': getRandomBoolean(),
+    'sa': getRandomBoolean(),
+    'su': getRandomBoolean(),
   });
 };
-
 const generateTask = () => {
   const dueDate = getRandomBoolean() ? null : getRandomDate();
   const days = dueDate ? DefaultRepeatingDays : generateRepeatingDays();

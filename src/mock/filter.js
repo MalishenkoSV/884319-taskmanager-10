@@ -1,35 +1,47 @@
-import {getFullDate} from '../utils.js';
-const filtersNames = [
-  `all`, `overdue`, `today`, `favorites`, `repeating`, `tags`, `archive`
-];
 
-
-const getFilterCountItems = (title, tasks) => {
-
-  switch (title) {
-    case `overdue`:
-      return tasks.filter((task) => task.dueDate < Date.now()).length;
-    case `today`:
-      return tasks.filter((task) => getFullDate(task.dueDate) === getFullDate()).length;
-    case `favorites`:
-      return tasks.filter((task) => task.isFavorite).length;
-    case `repeating`:
-      return tasks.filter((task) => Object.values(task.repeatingDays).some(Boolean)).length;
-    case `tags`:
-      return tasks.filter((task) => Array.from(task.tags).length).length;
-    case `archive`:
-      return tasks.filter((task) => task.isArchive).length;
-    default:
-      return tasks.length;
-  }
-};
 const generateFilters = (tasks) => {
-  return filtersNames.map((it) => {
-    return {
-      name: it,
-      count: getFilterCountItems(it, tasks),
-    };
-  });
+  return [
+    {
+      title: `all`,
+      count: tasks.length
+    },
+    {
+      title: `overdue`,
+      count: tasks.reduce((reducer, task) => {
+        return (task.dueDate instanceof Date && task.dueDate < Date.now()) ? ++reducer : reducer;
+      }, 0)
+    },
+    {
+      title: `today`,
+      count: tasks.reduce((reducer, task) => {
+        let today = new Date();
+        return (task.dueDate instanceof Date && task.dueDate.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) ? ++reducer : reducer;
+      }, 0)
+    },
+    {
+      title: `favorite`,
+      count: tasks.reduce((reducer, task) => {
+        return task.isFavorite ? ++reducer : reducer;
+      }, 0)
+    },
+    {
+      title: `repeating`,
+      count: tasks.reduce((reducer, {repeatingDays}) =>
+        Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? reducer + 1 : reducer, 0)
+    },
+    {
+      title: `tags`,
+      count: tasks.reduce((reducer, task) => {
+        return task.tags.size > 0 ? ++reducer : reducer;
+      }, 0)
+    },
+    {
+      title: `archive`,
+      count: tasks.reduce((reducer, task) => {
+        return task.isArchived ? ++reducer : reducer;
+      }, 0)
+    },
+  ];
 };
 
 export {generateFilters};
