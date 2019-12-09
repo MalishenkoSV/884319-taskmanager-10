@@ -12,29 +12,27 @@ import {generateFilters} from "./mock/filter";
 const TASK_NUMBER = 22;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
+const placeMainElement = document.querySelector(`.main`);
+const placeMainControl = placeMainElement.querySelector(`.main__control`);
+
+let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
+const tasks = generateTasks(TASK_NUMBER);
 
 //  функция вставки
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
-// вставка
-const placeMainElement = document.querySelector(`.main`);
-const placeMainControl = placeMainElement.querySelector(`.main__control`);
+// menu
 render(placeMainControl, createMenuSiteTemplate());
-
-let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-const tasks = generateTasks(TASK_NUMBER);
-
+// filters
 const filters = generateFilters(tasks);
 render(placeMainElement, createFilterTemplate(filters));
+// bord
 render(placeMainElement, createBordTemplate());
-
 const placeTaskListElement = placeMainElement.querySelector(`.board__tasks`);
-render(placeTaskListElement, createFormEditTaskTemplate(tasks[0]));
-
-tasks.slice(1, showingTasksCount).map((task) => render(placeTaskListElement, createCardTaskTemplate(task)));
-
 const boardElement = placeMainElement.querySelector(`.board`);
+render(placeTaskListElement, createFormEditTaskTemplate(tasks[0]));
+tasks.slice(1, showingTasksCount).map((task) => render(placeTaskListElement, createCardTaskTemplate(task)));
 render(boardElement, createButtonLoadMoreTemplate());
 
 const loadMoreButton = boardElement.querySelector(`.load-more`);

@@ -1,47 +1,37 @@
-
 const generateFilters = (tasks) => {
-  return [
-    {
-      title: `all`,
-      count: tasks.length
-    },
-    {
-      title: `overdue`,
-      count: tasks.reduce((reducer, task) => {
-        return (task.dueDate instanceof Date && task.dueDate < Date.now()) ? ++reducer : reducer;
-      }, 0)
-    },
-    {
-      title: `today`,
-      count: tasks.reduce((reducer, task) => {
-        let today = new Date();
-        return (task.dueDate instanceof Date && task.dueDate.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) ? ++reducer : reducer;
-      }, 0)
-    },
-    {
-      title: `favorite`,
-      count: tasks.reduce((reducer, task) => {
-        return task.isFavorite ? ++reducer : reducer;
-      }, 0)
-    },
-    {
-      title: `repeating`,
-      count: tasks.reduce((reducer, {repeatingDays}) =>
-        Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? reducer + 1 : reducer, 0)
-    },
-    {
-      title: `tags`,
-      count: tasks.reduce((reducer, task) => {
-        return task.tags.size > 0 ? ++reducer : reducer;
-      }, 0)
-    },
-    {
-      title: `archive`,
-      count: tasks.reduce((reducer, task) => {
-        return task.isArchived ? ++reducer : reducer;
-      }, 0)
-    },
-  ];
+  let filters = {
+    ALL: 0,
+    OVERDUE: 0,
+    TODAY: 0,
+    FAVORITES: 0,
+    REPIATING: 0,
+    TAGS: 0,
+    ARCHIVE: 0
+  };
+
+  const currentDate = new Date();
+
+  const counter = tasks.reduce((value, task) => {
+    value.ALL += 1;
+    value.OVERDUE += task.dueDate < currentDate;
+    value.TODAY += new Date(task.dueDate).toDateString() === currentDate.toDateString();
+    value.FAVORITES += task.isFavorite;
+    value.ARCHIVE += task.isArchive;
+    value.REPIATING += Object.values(task.repeatingDays).some((day) => day);
+    value.TAGS = task.tags.size > 0 ? ++value.TAGS : value.TAGS;
+    return value;
+  }, filters);
+
+  // counter.tags = new Set(counter.tags).size;
+
+  const result = Object.entries(counter).map((el) => {
+    return {
+      title: el[0],
+      count: el[1]
+    };
+  });
+
+  return result;
 };
 
 export {generateFilters};

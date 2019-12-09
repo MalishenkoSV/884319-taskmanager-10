@@ -1,7 +1,7 @@
 const RANDOM_LIMIT = 0.5;
 
 export const getRandomIntegerNumber = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
-export const getRandomElementFromArray = (array) => {
+export const getRandomElement = (array) => {
   const rand = Math.floor(Math.random() * array.length);
   return array[rand];
 };

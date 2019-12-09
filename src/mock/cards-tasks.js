@@ -1,23 +1,22 @@
 import {COLORS} from '../const.js';
-import {getRandomBoolean, getRandomElementFromArray, getRandomDate} from '../utils.js';
+import {getRandomBoolean, getRandomElement, getRandomDate} from '../utils.js';
 
 const MIN_TAGS_COUNT = 0;
 const MAX_TAGS_COUNT = 3;
 
-const DESCRIPTION_ITEM = [
+const DESCRIPTION_ITEMS = [
   `Изучить теорию`,
   `Сделать домашку`,
   `Пройти интенсив на соточку`,
 ];
-
-const DefaultRepeatingDays = {
-  'mo': false,
-  'tu': false,
-  'we': false,
-  'th': false,
-  'fr': false,
-  'sa': false,
-  'su': false,
+export const TaskDay = {
+  MO: `mo`,
+  TU: `tu`,
+  WE: `we`,
+  TH: `th`,
+  FR: `fr`,
+  SA: `sa`,
+  SU: `su`,
 };
 
 const TAGS = [
@@ -31,35 +30,26 @@ const TAGS = [
 const generateTags = (tags) => {
   return tags.filter(() => getRandomBoolean()).slice(MIN_TAGS_COUNT, MAX_TAGS_COUNT);
 };
-
-// const generateRepeatingDays = () => {
-//   return Object.assign({}, DefaultRepeatingDays, {
-//     'mo': getRandomBoolean(),
-//   });
-// };
-const generateRepeatingDays = () => {
-  return Object.assign({}, DefaultRepeatingDays, {
-    'mo': getRandomBoolean(),
-    'tu': getRandomBoolean(),
-    'we': getRandomBoolean(),
-    'th': getRandomBoolean(),
-    'fr': getRandomBoolean(),
-    'sa': getRandomBoolean(),
-    'su': getRandomBoolean(),
-  });
+const repeatDayReducer = (days, day) => {
+  days[day] = getRandomBoolean(0.9);
+  return days;
 };
+const getRepeatingDays = (days) =>
+  days.reduce(repeatDayReducer, {});
+
+
 const generateTask = () => {
   const dueDate = getRandomBoolean() ? null : getRandomDate();
-  const days = dueDate ? DefaultRepeatingDays : generateRepeatingDays();
+  const weekDays = Object.values(TaskDay);
   return {
-    description: getRandomElementFromArray(DESCRIPTION_ITEM),
+    description: getRandomElement(DESCRIPTION_ITEMS),
     dueDate,
-    repeatingDays: days,
-    tags: new Set(generateTags(TAGS)),
-    color: getRandomElementFromArray(COLORS),
+    repeatingDays: getRepeatingDays(weekDays),
+    tags: generateTags(TAGS),
+    color: getRandomElement(COLORS),
     isFavorite: getRandomBoolean(),
     isArchive: getRandomBoolean(),
-    isRepeated: Object.values(days).some((day) => day),
+    isRepeated: Date.now() > dueDate,
   };
 
 };
