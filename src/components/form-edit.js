@@ -113,7 +113,7 @@ export const createFormEditTaskTemplate = (task) => {
                     <button class="card__repeat-toggle" type="button">
                       repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
                     </button>
-                    ${isRepeatingTask ? `<fieldset class="card__repeat-days">
+                    ${isRepeatingTask ? `<fieldset class="card__repeat-days">${isRepeatingTask ? `` : `disabled`}
                         <div class="card__repeat-days-inner">
                           ${repeatingDaysMarkup}
                         </div>

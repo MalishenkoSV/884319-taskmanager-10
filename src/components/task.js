@@ -51,25 +51,24 @@ export const createCardTaskTemplate = (task) => {
 
                 <div class="card__settings">
                     <div class="card__details">
-
-                        ${dueDate ? `<div class="card__dates">
+           ${dueDate ? `<div class="card__dates">
                             <div class="card__date-deadline">
                                 <p class="card__input-deadline-wrap">
                                     <span class="card__date">${cardDate ? cardDate : ``}</span>
                                     <span class="card__time">${cardTime ? cardTime : ``}</span>
                                 </p>
-                            </div>
-                        </div>` : ``}
+                            </div>` : ``}
 
-                        <div class="card__hashtag">
-                <div class="card__hashtag-list">
-                  ${hashtags}
+                            <div class="card__hashtag">
+                                <div class="card__hashtag-list">
+                                    ${hashtags}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
+         </div>
     </article>`
   );
 };

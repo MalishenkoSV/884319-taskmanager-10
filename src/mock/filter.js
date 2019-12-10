@@ -1,5 +1,5 @@
 const generateFilters = (tasks) => {
-  let filters = {
+  const filters = {
     ALL: 0,
     OVERDUE: 0,
     TODAY: 0,
@@ -10,19 +10,17 @@ const generateFilters = (tasks) => {
   };
 
   const currentDate = new Date();
-
   const counter = tasks.reduce((value, task) => {
-    value.ALL += 1;
-    value.OVERDUE += task.dueDate < currentDate;
-    value.TODAY += new Date(task.dueDate).toDateString() === currentDate.toDateString();
-    value.FAVORITES += task.isFavorite;
-    value.ARCHIVE += task.isArchive;
-    value.REPIATING += Object.values(task.repeatingDays).some((day) => day);
-    value.TAGS = task.tags.size > 0 ? ++value.TAGS : value.TAGS;
+    value.OVERDUE += +(task.dueDate && task.dueDate < currentDate);
+    value.TODAY += +(task.dueDate > currentDate);
+    value.FAVORITES += +(task.isFavorite);
+    value.ARCHIVE += +(task.isArchive);
+    value.ALL = tasks.length - value.ARCHIVE;
+    value.REPIATING += +(Object.values(task.repeatingDays).some((day) => day));
+    value.TAGS += +(task.tags.size > 0);
     return value;
   }, filters);
 
-  // counter.tags = new Set(counter.tags).size;
 
   const result = Object.entries(counter).map((el) => {
     return {

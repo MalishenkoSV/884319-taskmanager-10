@@ -1,9 +1,10 @@
 import {COLORS} from '../const.js';
 import {getRandomBoolean, getRandomElement, getRandomDate} from '../utils.js';
 
-const MIN_TAGS_COUNT = 0;
-const MAX_TAGS_COUNT = 3;
-
+const TagsCount = {
+  MIN: 0,
+  MAX: 3
+};
 const DESCRIPTION_ITEMS = [
   `Изучить теорию`,
   `Сделать домашку`,
@@ -18,7 +19,15 @@ export const TaskDay = {
   SA: `sa`,
   SU: `su`,
 };
-
+const DefaultRepeatingDays = {
+  'mo': false,
+  'tu': false,
+  'we': false,
+  'th': false,
+  'fr': false,
+  'sa': false,
+  'su': false,
+};
 const TAGS = [
   `homework`,
   `theory`,
@@ -28,28 +37,26 @@ const TAGS = [
 ];
 
 const generateTags = (tags) => {
-  return tags.filter(() => getRandomBoolean()).slice(MIN_TAGS_COUNT, MAX_TAGS_COUNT);
+  return tags.filter(() => getRandomBoolean()).slice(TagsCount.MIN, TagsCount.MAX);
 };
-const repeatDayReducer = (days, day) => {
-  days[day] = getRandomBoolean(0.9);
-  return days;
+
+const getRepeatingDays = () => {
+  return Object.assign({}, DefaultRepeatingDays, {
+    'mo': getRandomBoolean(),
+  });
 };
-const getRepeatingDays = (days) =>
-  days.reduce(repeatDayReducer, {});
 
 
 const generateTask = () => {
   const dueDate = getRandomBoolean() ? null : getRandomDate();
-  const weekDays = Object.values(TaskDay);
   return {
     description: getRandomElement(DESCRIPTION_ITEMS),
     dueDate,
-    repeatingDays: getRepeatingDays(weekDays),
-    tags: generateTags(TAGS),
+    repeatingDays: dueDate ? DefaultRepeatingDays : getRepeatingDays(),
+    tags: new Set(generateTags(TAGS)),
     color: getRandomElement(COLORS),
     isFavorite: getRandomBoolean(),
-    isArchive: getRandomBoolean(),
-    isRepeated: Date.now() > dueDate,
+    isArchive: getRandomBoolean()
   };
 
 };
