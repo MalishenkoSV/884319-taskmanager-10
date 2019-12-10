@@ -1,10 +1,8 @@
-const getChecked = (title) => {
-  return title === `All` ? `checked` : ``;
-};
+
 const getDisabled = (count) => {
   return count === 0 ? `disabled` : ``;
 };
-const createFilterMarkup = (filter) => {
+const createFilterMarkup = (filter, isChecked) => {
   const {title, count} = filter;
 
   return (
@@ -12,7 +10,7 @@ const createFilterMarkup = (filter) => {
       id="filter__${title}"
       class="filter__input visually-hidden"
       name="filter"
-      ${getChecked(title)}
+      ${isChecked ? `checked` : ``}
       ${getDisabled(count)}
     />
       <label for="filter__${title}" class="filter__label">${title}
