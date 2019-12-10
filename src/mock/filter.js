@@ -1,31 +1,31 @@
 const generateFilters = (tasks) => {
   const filters = {
-    ALL: 0,
-    OVERDUE: 0,
-    TODAY: 0,
-    FAVORITES: 0,
-    REPIATING: 0,
-    TAGS: 0,
-    ARCHIVE: 0
+    all: 0,
+    overdue: 0,
+    today: 0,
+    favorites: 0,
+    repeating: 0,
+    tags: 0,
+    archive: 0
   };
 
   const currentDate = new Date();
   const counter = tasks.reduce((value, task) => {
-    value.OVERDUE += +(task.dueDate && task.dueDate < currentDate);
-    value.TODAY += +(task.dueDate > currentDate);
-    value.FAVORITES += +(task.isFavorite);
-    value.ARCHIVE += +(task.isArchive);
-    value.ALL = tasks.length - value.ARCHIVE;
-    value.REPIATING += +(Object.values(task.repeatingDays).some((day) => day));
-    value.TAGS += +(task.tags.size > 0);
+    value.overdue += +(task.dueDate < currentDate);
+    value.today += (new Date(task.dueDate).toDateString() === new Date(Date.now()).toDateString());
+    value.favorites += +(task.isFavorite);
+    value.archive += +(task.isArchive);
+    value.all = (tasks.length - value.archive);
+    value.repeating += +(Object.values(task.repeatingDays).some((day) => day));
+    value.tags += +(task.tags.size > 0);
     return value;
   }, filters);
 
 
-  const result = Object.entries(counter).map((el) => {
+  const result = Object.entries(counter).map((element) => {
     return {
-      title: el[0],
-      count: el[1]
+      title: element[0],
+      count: element[1]
     };
   });
 

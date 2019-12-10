@@ -34,7 +34,9 @@ render(placeMainElement, createBordTemplate());
 const placeTaskListElement = placeMainElement.querySelector(`.board__tasks`);
 render(placeTaskListElement, createFormEditTaskTemplate(tasks[0]));
 const renderCardTask = (task) => render(placeTaskListElement, createCardTaskTemplate(task));
-tasks.slice(1, showingTasksCount).map(renderCardTask);
+
+const sliceTask = (number) => tasks.slice(number, showingTasksCount).map(renderCardTask);
+sliceTask(1);
 const boardElement = placeMainElement.querySelector(`.board`);
 render(boardElement, createButtonLoadMoreTemplate());
 
@@ -42,7 +44,7 @@ const loadMoreButton = boardElement.querySelector(`.load-more`);
 loadMoreButton.addEventListener(`click`, () => {
   const prevTasksCount = showingTasksCount;
   showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-  tasks.slice(prevTasksCount, showingTasksCount).map(renderCardTask);
+  sliceTask(prevTasksCount);
   if (showingTasksCount >= tasks.length) {
     loadMoreButton.remove();
   }
