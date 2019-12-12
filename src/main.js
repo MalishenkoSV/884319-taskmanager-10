@@ -33,9 +33,8 @@ render(placeMainElement, createFilterTemplate(filters));
 render(placeMainElement, createBordTemplate());
 const placeTaskListElement = placeMainElement.querySelector(`.board__tasks`);
 render(placeTaskListElement, createFormEditTaskTemplate(tasks[0]));
-const renderCardTask = (task) => render(placeTaskListElement, createCardTaskTemplate(task));
 
-const sliceTask = (number) => tasks.slice(number, showingTasksCount).map(renderCardTask);
+const sliceTask = (number) => tasks.slice(number, showingTasksCount).map((task)=>render(placeTaskListElement, createCardTaskTemplate(task)));
 sliceTask(1);
 const boardElement = placeMainElement.querySelector(`.board`);
 render(boardElement, createButtonLoadMoreTemplate());

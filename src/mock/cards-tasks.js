@@ -43,6 +43,12 @@ const generateTags = (tags) => {
 const getRepeatingDays = () => {
   return Object.assign({}, DefaultRepeatingDays, {
     'mo': getRandomBoolean(),
+    'tu': getRandomBoolean(),
+    'we': getRandomBoolean(),
+    'th': getRandomBoolean(),
+    'fr': getRandomBoolean(),
+    'sa': getRandomBoolean(),
+    'su': getRandomBoolean(),
   });
 };
 
@@ -52,7 +58,7 @@ const generateTask = () => {
   return {
     description: getRandomElement(DESCRIPTION_ITEMS),
     dueDate,
-    repeatingDays: dueDate ? getRepeatingDays : getRepeatingDays(),
+    repeatingDays: dueDate ? DefaultRepeatingDays : getRepeatingDays(),
     tags: new Set(generateTags(TAGS)),
     color: getRandomElement(COLORS),
     isFavorite: getRandomBoolean(),
