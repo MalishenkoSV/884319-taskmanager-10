@@ -6,26 +6,45 @@ import {createCardTaskTemplate} from './components/task.js';
 import {createFormEditTaskTemplate} from './components/form-edit.js';
 import {createButtonLoadMoreTemplate} from './components/load-more-button.js';
 import {createBordTemplate} from './components/board.js';
+import {generateTasks} from './mock/cards-tasks.js';
+import {generateFilters} from "./mock/filter";
 
-const TASK_NUMBER = 3;
+const TASK_NUMBER = 22;
+const SHOWING_TASKS_COUNT_ON_START = 8;
+const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
+const placeMainElement = document.querySelector(`.main`);
+const placeMainControl = placeMainElement.querySelector(`.main__control`);
+
+let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
+const tasks = generateTasks(TASK_NUMBER);
 
 //  функция вставки
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
-// вставка
-const placeMainElement = document.querySelector(`.main`);
-const placeMainControl = placeMainElement.querySelector(`.main__control`);
-
+// menu
 render(placeMainControl, createMenuSiteTemplate());
-render(placeMainElement, createFilterTemplate());
+// filters
+const filters = generateFilters(tasks);
+render(placeMainElement, createFilterTemplate(filters));
+// bord
+
+
 render(placeMainElement, createBordTemplate());
-
 const placeTaskListElement = placeMainElement.querySelector(`.board__tasks`);
-render(placeTaskListElement, createFormEditTaskTemplate());
+render(placeTaskListElement, createFormEditTaskTemplate(tasks[0]));
 
-const getMarkup = () => new Array(TASK_NUMBER).fill(createCardTaskTemplate()).join(``);
-render(placeTaskListElement, getMarkup());
-const bordElement = placeMainElement.querySelector(`.board`);
-render(bordElement, createButtonLoadMoreTemplate());
+const renderTasksOnBord = (number) => render(placeTaskListElement, tasks.slice(number, showingTasksCount).map(createCardTaskTemplate).join(``));
+renderTasksOnBord(1);
+const boardElement = placeMainElement.querySelector(`.board`);
+render(boardElement, createButtonLoadMoreTemplate());
 
+const loadMoreButton = boardElement.querySelector(`.load-more`);
+loadMoreButton.addEventListener(`click`, () => {
+  const prevTasksCount = showingTasksCount;
+  showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
+  renderTasksOnBord(prevTasksCount);
+  if (showingTasksCount >= tasks.length) {
+    loadMoreButton.remove();
+  }
+});
