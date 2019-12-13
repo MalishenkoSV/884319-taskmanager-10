@@ -52,7 +52,7 @@ const getRepeatingDays = () => {
   };
 };
 
-const repeatingDays =  Object.assign({}, DefaultRepeatingDays);
+const repeatingDays = Object.assign({}, DefaultRepeatingDays);
 
 const generateTask = () => {
   const dueDate = getRandomBoolean() ? null : getRandomDate();
