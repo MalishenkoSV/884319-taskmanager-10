@@ -52,13 +52,18 @@ const getRepeatingDays = () => {
   };
 };
 
+const generateRepeatingDays = () => {
+  return Object.assign({}, DefaultRepeatingDays, {
+    'mo': Math.random() > 0.5,
+  });
+};
 
 const generateTask = () => {
   const dueDate = getRandomBoolean() ? null : getRandomDate();
   return {
     description: getRandomElement(DESCRIPTION_ITEMS),
     dueDate,
-    repeatingDays: dueDate ? DefaultRepeatingDays : getRepeatingDays(),
+    repeatingDays: dueDate ? generateRepeatingDays() : getRepeatingDays(),
     tags: new Set(generateTags(TAGS)),
     color: getRandomElement(COLORS),
     isFavorite: getRandomBoolean(),
