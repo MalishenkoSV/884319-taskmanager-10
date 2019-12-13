@@ -41,7 +41,7 @@ const generateTags = (tags) => {
 };
 
 const getRepeatingDays = () => {
-  return Object.assign({}, DefaultRepeatingDays, {
+  return {
     'mo': getRandomBoolean(),
     'tu': getRandomBoolean(),
     'we': getRandomBoolean(),
@@ -49,7 +49,7 @@ const getRepeatingDays = () => {
     'fr': getRandomBoolean(),
     'sa': getRandomBoolean(),
     'su': getRandomBoolean(),
-  });
+  };
 };
 
 
