@@ -26,6 +26,7 @@ export const createMenuSiteTemplate = () => {
           </label>
      </section>`);
 };
+
 export default class SiteMenu {
   constructor() {
     this._element = null;
