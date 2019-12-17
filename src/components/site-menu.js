@@ -1,4 +1,5 @@
-// site-menu.js
+import {createElement} from "../utils";
+
 export const createMenuSiteTemplate = () => {
   return (
     `<section class="control__btn-wrap">
@@ -25,3 +26,24 @@ export const createMenuSiteTemplate = () => {
           </label>
      </section>`);
 };
+export default class SiteMenu {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMenuSiteTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

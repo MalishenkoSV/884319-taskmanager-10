@@ -44,3 +44,9 @@ export const getShuffledSubarray = (array, numberOfElements) => {
   const shuffledArr = shuffleArray(array);
   return shuffledArr.slice(0, numberOfElements);
 };
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
