@@ -1,4 +1,4 @@
-import SiteMenuComponent from './components/site-menu.js';
+import SiteMenu from './components/site-menu.js';
 import Filter from './components/filter.js';
 import Task from './components/task.js';
 import FormEdit from './components/form-edit.js';
@@ -7,58 +7,57 @@ import Board from './components/board.js';
 import {generateTasks} from './mock/cards-tasks.js';
 import {generateFilters} from './mock/filter.js';
 import {render, RenderPosition} from './utils.js';
+import {COLORS} from './const';
 
 const TASK_NUMBER = 22;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 const placeMainElement = document.querySelector(`.main`);
 const placeMainControl = placeMainElement.querySelector(`.main__control`);
+let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
 
-const renderTask = (task) => {
-  const taskComponent = new Task(task);
-  const formEditComponent = new FormEdit(task);
-
-  const buttonFormEdit = taskComponent.getElement().querySelector(`.card__btn--edit`);
-  buttonFormEdit.addEventListener(`click`, function () {
-    taskListElement.replaceChild(formEditComponent.getElement(), taskComponent.getElement());
-  });
-
-  const editForm = formEditComponent.getElement().querySelector(`form`);
-  editForm.addEventListener(`submit`, () => {
-    taskListElement.replaceChild(taskComponent.getElement(), formEditComponent.getElement());
-  });
-
-  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREBEGIN);
-};
-
+const dataTasks = generateTasks(TASK_NUMBER);
 
 // menu
-render(placeMainControl, new SiteMenuComponent().getElement(), RenderPosition.BEFOREBEGIN);
-let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-const tasks = generateTasks(TASK_NUMBER);
+const menu = new SiteMenu();
+render(placeMainControl, menu.getElement(), RenderPosition.BEFOREBEGIN);
 
-const filters = generateFilters(tasks);
-render(placeMainElement, new Filter(filters).getElement(), RenderPosition.BEFOREBEGIN);
-
+// filters
+const filters = generateFilters(dataTasks);
+const filter = new Filter(filters);
+render(placeMainElement, filter.getElement(), RenderPosition.BEFOREBEGIN);
 // bord
 const boardComponent = new Board();
 render(placeMainElement, boardComponent.getElement(), RenderPosition.BEFOREBEGIN);
 
-const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);
 
-const renderTasksOnBord = (number) => tasks.slice(number, showingTasksCount).map((task) => {
-  renderTask(task);
-});
-renderTasksOnBord(0);
-const boardElement = placeMainElement.querySelector(`.board`);
+const boardContainerSelector = placeMainElement.querySelector(`.board`);
+const boardTasks = boardComponent.getElement().querySelector(`.board__tasks`);
+
+const renderTask = (taskMock, colors) => {
+  const taskComponent = new Task(taskMock);
+  const formEditComponent = new FormEdit(taskMock, colors);
+  const buttonFormEdit = taskComponent.getElement().querySelector(`.card__btn--edit`);
+  const editForm = formEditComponent.getElement().querySelector(`form`);
+
+  buttonFormEdit.addEventListener(`click`, function () {
+    boardTasks.replaceChild(formEditComponent.getElement(), taskComponent.getElement());
+  });
+  editForm.addEventListener(`click`, function () {
+    boardTasks.replaceChild(taskComponent.getElement(), formEditComponent.getElement());
+  });
+  render(boardTasks, taskComponent.getElement(), RenderPosition.BEFOREBEGIN);
+};
+const renderTasksOnBord = (number) => dataTasks.slice(number, showingTasksCount).map((task) =>renderTask(task, boardContainerSelector, COLORS));
+renderTasksOnBord(1);
 const loadMoreButtonComponent = new LoadMoreButton();
-render(boardElement, loadMoreButtonComponent.getElement(), RenderPosition.BEFOREBEGIN);
+render(boardContainerSelector, loadMoreButtonComponent.getElement(), RenderPosition.BEFOREBEGIN);
 
-loadMoreButtonComponent.addEventListener(`click`, () => {
+loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
   const prevTasksCount = showingTasksCount;
   showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-  renderTask(prevTasksCount, RenderPosition.BEFOREBEGIN);
-  if (showingTasksCount >= tasks.length) {
-    loadMoreButtonComponent.remove();
+  renderTasksOnBord(prevTasksCount);
+  if (showingTasksCount >= dataTasks.length) {
+    loadMoreButtonComponent.getElement().remove();
   }
 });

@@ -16,7 +16,7 @@ const createHashtagsMarkup = (hashtags) => {
 };
 
 
-export const createCardTaskTemplate = (task) => {
+const createCardTaskTemplate = (task) => {
   const {description, tags, dueDate, color, repeatingDays, isArchive, isFavorite} = task;
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
