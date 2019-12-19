@@ -48,8 +48,8 @@ const renderTask = (taskMock, colors) => {
   });
   render(boardTasks, taskComponent.getElement(), RenderPosition.BEFOREBEGIN);
 };
-const renderTasksOnBord = (number) => dataTasks.slice(number, showingTasksCount).map((task) =>renderTask(task, boardContainerSelector, COLORS));
-renderTasksOnBord(1);
+const renderTasksOnBord = (number) => dataTasks.slice(number, showingTasksCount).forEach((task) =>renderTask(task, boardContainerSelector, COLORS));
+renderTasksOnBord(0);
 const loadMoreButtonComponent = new LoadMoreButton();
 render(boardContainerSelector, loadMoreButtonComponent.getElement(), RenderPosition.BEFOREBEGIN);
 
