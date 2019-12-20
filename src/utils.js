@@ -1,4 +1,8 @@
 const RANDOM_LIMIT = 0.5;
+export const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREBEGIN: `beforebegin`
+};
 
 export const getRandomIntegerNumber = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
 export const getRandomElement = (array) => {
@@ -43,4 +47,26 @@ const shuffleArray = (array) => {
 export const getShuffledSubarray = (array, numberOfElements) => {
   const shuffledArr = shuffleArray(array);
   return shuffledArr.slice(0, numberOfElements);
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstElementChild;
+};
+
+export const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREBEGIN:
+      container.append(element);
+      break;
+  }
+};
+export const remove = (element) => {
+  if (element) {
+    element.remove();
+  }
 };

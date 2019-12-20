@@ -1,5 +1,6 @@
+import {createElement, formatTime} from "../utils.js";
 import {MONTH_NAMES} from '../const.js';
-import {formatTime} from '../utils.js';
+
 const createHashtagsMarkup = (hashtags) => {
   return hashtags
     .map((hashtag) => {
@@ -14,7 +15,8 @@ const createHashtagsMarkup = (hashtags) => {
     .join(`\n`);
 };
 
-export const createCardTaskTemplate = (task) => {
+
+const createCardTaskTemplate = (task) => {
   const {description, tags, dueDate, color, repeatingDays, isArchive, isFavorite} = task;
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
@@ -38,17 +40,14 @@ export const createCardTaskTemplate = (task) => {
                     <button type="button" class="card__btn card__btn--favorites ${isFavorite ? `` : `card__btn--disabled`}">favorites
                     </button>
                 </div>
-
                 <div class="card__color-bar">
                     <svg class="card__color-bar-wave" width="100%" height="10">
                         <use xlink:href="#wave"></use>
                     </svg>
                 </div>
-
                 <div class="card__textarea-wrap">
                     <p class="card__text">${description}</p>
                 </div>
-
                 <div class="card__settings">
                     <div class="card__details">
            ${dueDate ? `<div class="card__dates">
@@ -58,7 +57,6 @@ export const createCardTaskTemplate = (task) => {
                                     <span class="card__time">${cardTime ? cardTime : ``}</span>
                                 </p>
                             </div>` : ``}
-
                             <div class="card__hashtag">
                                 <div class="card__hashtag-list">
                                     ${hashtags}
@@ -72,3 +70,25 @@ export const createCardTaskTemplate = (task) => {
     </article>`
   );
 };
+
+export default class Task {
+  constructor(task) {
+    this._element = null;
+    this._task = task;
+  }
+  getTemplate() {
+    return createCardTaskTemplate(this._task);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    if (this._element) {
+      this._element = null;
+    }
+    return this._element;
+  }
+}

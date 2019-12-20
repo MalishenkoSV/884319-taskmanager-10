@@ -1,6 +1,6 @@
 // form-edit.js
 import {COLORS, DAYS, MONTH_NAMES} from '../const.js';
-import {formatTime} from '../utils.js';
+import {formatTime, createElement} from '../utils.js';
 
 const createCardsColorsMarkup = (currentColor) => {
   return COLORS.map((color) => {
@@ -151,3 +151,25 @@ export const createFormEditTaskTemplate = (task) => {
         </form>
   </article>`);
 };
+export default class FormEdit {
+  constructor(task) {
+    this._element = null;
+    this._task = task;
+  }
+
+  getTemplate() {
+    return createFormEditTaskTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
