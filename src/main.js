@@ -4,7 +4,6 @@ import Task from './components/task.js';
 import FormEdit from './components/form-edit.js';
 import LoadMoreButton from './components/load-more-button.js';
 import Board from './components/board.js';
-import Sort from "./components/sorting.js";
 import Message from "./components/message.js";
 import {generateTasks} from './mock/cards-tasks.js';
 import {generateFilters} from './mock/filter.js';
@@ -19,27 +18,6 @@ const placeMainControl = placeMainElement.querySelector(`.main__control`);
 let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
 
 const dataTasks = generateTasks(TASK_NUMBER);
-
-// menu
-const menu = new SiteMenu();
-render(placeMainControl, menu.getElement(), RenderPosition.BEFOREEND);
-
-const allTaskArchived = dataTasks.every((tasks) => tasks.isArchived);
-// filters
-const filters = generateFilters(dataTasks);
-const filter = new Filter(filters);
-const renderBoardFilters = () => {
-  render(placeMainElement, filter.getElement(), RenderPosition.BEFOREEND);
-};
-renderBoardFilters();
-// bord
-const boardComponent = new Board();
-render(placeMainElement, boardComponent.getElement(), RenderPosition.BEFOREEND);
-
-
-const boardContainerSelector = placeMainElement.querySelector(`.board`);
-const boardTasks = boardComponent.getElement().querySelector(`.board__tasks`);
-
 const renderTask = (taskMock, colors) => {
   const taskComponent = new Task(taskMock);
   const formEditComponent = new FormEdit(taskMock, colors);
@@ -60,37 +38,59 @@ const renderTask = (taskMock, colors) => {
   };
 
   buttonEdit.addEventListener(`click`, function () {
-    document.addEventListener(`keydown`, onEscKeyDown);
     replaceTaskToEdit();
   });
-  editForm.addEventListener(`submit`, function () {
+  editForm.addEventListener(`submit`, function (evt) {
+    evt.preventDefault();
+    document.addEventListener(`keydown`, onEscKeyDown);
     replaceEditToTask();
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
-  render(boardTasks, taskComponent.getElement(), RenderPosition.BEFOREEND);
+  render(boardTasks, taskComponent.getElement(), RenderPosition.BEFORE_BEGIN);
 };
-const renderSort = render(boardComponent.getElement(), new Sort().getElement(), RenderPosition.BEFOREBEGIN);
+// menu
+const menu = new SiteMenu();
+render(placeMainControl, menu.getElement(), RenderPosition.BEFORE_BEGIN);
+
+const allTaskArchived = dataTasks.every((tasks) => tasks.isArchived);
+// filters
+const filters = generateFilters(dataTasks);
+const filter = new Filter(filters);
+const renderBoardFilters = () => {
+  render(placeMainElement, filter.getElement(), RenderPosition.BEFORE_BEGIN);
+};
+renderBoardFilters();
+// bord
+const boardComponent = new Board();
+const renderBoard = () => {
+  render(placeMainElement, boardComponent.getElement(), RenderPosition.BEFORE_BEGIN);
+};
+renderBoard();
+const boardContainerSelector = placeMainElement.querySelector(`.board`);
+const boardTasks = boardComponent.getElement().querySelector(`.board__tasks`);
+
 const renderTasksOnBord = (number) => dataTasks.slice(number, showingTasksCount).forEach((task) =>renderTask(task, boardContainerSelector, COLORS));
 renderTasksOnBord(0);
 const loadMoreButtonComponent = new LoadMoreButton();
-render(boardContainerSelector, loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+render(boardContainerSelector, loadMoreButtonComponent.getElement(), RenderPosition.BEFORE_BEGIN);
 
-const renderButton = loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
-  const prevTasksCount = showingTasksCount;
-  showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-  renderTasksOnBord(prevTasksCount);
-  if (showingTasksCount >= dataTasks.length) {
-    loadMoreButtonComponent.getElement().remove();
-  }
-});
+const renderButton = () => {
+  loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
+    const prevTasksCount = showingTasksCount;
+    showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
+    renderTasksOnBord(prevTasksCount);
+    if (showingTasksCount >= dataTasks.length) {
+      loadMoreButtonComponent.getElement().remove();
+    }
+  });
+};
 const renderMessage = () => {
   const message = new Message();
-  render(boardTasks, message.getElement(), RenderPosition.BEFOREEND);
+  render(boardTasks, message.getElement(), RenderPosition.BEFORE_END);
 };
 if (allTaskArchived) {
   renderMessage(dataTasks);
 } else {
-  renderSort();
-  renderBoardFilters();
   renderTasksOnBord();
   renderButton();
 }
