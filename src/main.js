@@ -38,11 +38,11 @@ const renderTask = (taskMock, colors) => {
   };
 
   buttonEdit.addEventListener(`click`, function () {
+    document.addEventListener(`keydown`, onEscKeyDown);
     replaceTaskToEdit();
   });
   editForm.addEventListener(`submit`, function (evt) {
     evt.preventDefault();
-    document.addEventListener(`keydown`, onEscKeyDown);
     replaceEditToTask();
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
@@ -74,7 +74,7 @@ renderTasksOnBord(0);
 const loadMoreButtonComponent = new LoadMoreButton();
 render(boardContainerSelector, loadMoreButtonComponent.getElement(), RenderPosition.BEFORE_BEGIN);
 
-const renderButton = () => {
+const onButtonClick = () => {
   loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
     const prevTasksCount = showingTasksCount;
     showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
@@ -92,5 +92,5 @@ if (allTaskArchived) {
   renderMessage(dataTasks);
 } else {
   renderTasksOnBord();
-  renderButton();
+  onButtonClick();
 }
