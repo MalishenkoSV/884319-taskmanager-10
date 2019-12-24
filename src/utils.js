@@ -1,7 +1,7 @@
 const RANDOM_LIMIT = 0.5;
 export const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREBEGIN: `beforebegin`
+  AFTER_BEGIN: `afterbegin`,
+  BEFORE_BEGIN: `beforbegin`
 };
 
 export const getRandomIntegerNumber = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
@@ -57,10 +57,10 @@ export const createElement = (template) => {
 
 export const render = (container, element, place) => {
   switch (place) {
-    case RenderPosition.AFTERBEGIN:
+    case RenderPosition.AFTER_BEGIN:
       container.prepend(element);
       break;
-    case RenderPosition.BEFOREBEGIN:
+    case RenderPosition.BEFORE_BEGIN:
       container.append(element);
       break;
   }
